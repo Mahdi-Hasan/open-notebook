@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `make start-all` starts SurrealDB again (it pointed to a compose file removed long ago)
 - The legacy `SURREAL_ADDRESS` / `SURREAL_PORT` fallback builds a valid database URL (`ws://host:port/rpc`, was `ws://host/rpc:port`); an address that already includes the port is kept as is
 - `.env.example` names the chunking variables Open Notebook actually reads (`OPEN_NOTEBOOK_CHUNK_SIZE` / `OPEN_NOTEBOOK_CHUNK_OVERLAP`)
+- **Deleting a source no longer reports success when nothing was deleted.** A SurrealDB transaction conflict (e.g. while the worker writes embeddings) is retried up to 3 times; if it still fails, `DELETE /api/sources/{id}` returns 500 instead of 200. The uploaded file is removed only after the database records are gone, so a failed delete no longer leaves a source without its file (#1510)
 
 ## [1.15.0] - 2026-10-04
 
